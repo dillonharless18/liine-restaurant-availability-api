@@ -1,7 +1,6 @@
 import csv
 import http.server
-import socketserver
-import ssl
+import json
 from collections import defaultdict
 from urllib.parse import urlparse, parse_qs
 
@@ -15,3 +14,16 @@ def load_restaurant_hours(filename):
             name, hours = row
             restaurant_hours[name].append(hours)
     return restaurant_hours
+
+class RequestHandler(http.server.BaseHTTPRequestHandler):
+    def do_GET(self):
+        pass
+
+def run(server_class=http.server.HTTPServer, handler_class=RequestHandler, port=80):
+    server_address = ('', port)
+    httpd = server_class(server_address, handler_class)
+
+    print(f'Serving HTTP on port {port}...')
+    httpd.serve_forever()
+
+run()
