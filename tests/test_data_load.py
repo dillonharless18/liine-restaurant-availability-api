@@ -35,6 +35,19 @@ class TestLoadRestaurantHours(unittest.TestCase):
         result = load_restaurant_hours(self.filename)
         self.assertEqual(result, expected_result)
 
+    def test_empty_file(self):
+        # Empty csv file test should return empty defaultdict - only have a header row here
+        with open(self.filename, 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile)
+            writer.writerow(['Restaurant Name', 'Hours'])
+
+        expected_result = defaultdict(list)
+
+        result = load_restaurant_hours(self.filename)
+
+        self.assertEqual(result, expected_result)
+
+
 if __name__ == '__main__':
     unittest.main()
 
