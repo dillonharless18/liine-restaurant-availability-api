@@ -17,7 +17,14 @@ def load_restaurant_hours(filename):
 
 class RequestHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
-        pass
+        if self.path == '/restaurants':
+            self.send_response(200)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            response_data = {'x': 'z'}
+            json_response = json.dumps(response_data)
+            self.wfile.write(json_response.encode())
+
 
 def run(server_class=http.server.HTTPServer, handler_class=RequestHandler, port=3000):
     server_address = ('127.0.0.1', port)
