@@ -26,4 +26,5 @@ def run(server_class=http.server.HTTPServer, handler_class=RequestHandler, port=
     print(f'Serving HTTP on port {port}...')
     httpd.serve_forever()
 
-run()
+if __name__ == '__main__':
+    run()
