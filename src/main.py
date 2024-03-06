@@ -19,8 +19,8 @@ class RequestHandler(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         pass
 
-def run(server_class=http.server.HTTPServer, handler_class=RequestHandler, port=80):
-    server_address = ('', port)
+def run(server_class=http.server.HTTPServer, handler_class=RequestHandler, port=3000):
+    server_address = ('127.0.0.1', port)
     httpd = server_class(server_address, handler_class)
 
     print(f'Serving HTTP on port {port}...')
