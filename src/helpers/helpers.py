@@ -78,7 +78,7 @@ def preprocess_data(filepath):
 
 # Function to check if a restaurant is open
 def get_open_restaurants(structured_data, datetime_str):
-    dt = datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S')
+    dt = datetime.strptime(datetime_str, '%Y-%m-%dT%H:%M:%S')
     day_abbr = dt.strftime('%a')
     time = dt.time()
     day = day_map.get(day_abbr)
