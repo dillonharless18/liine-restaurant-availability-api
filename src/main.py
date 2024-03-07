@@ -25,23 +25,35 @@ def load_restaurant_hours(filename):
 
 class RequestHandler(BaseHTTPRequestHandler):
     def __init__(self, restaurant_hours, *args, **kwargs):
-        self.restaurant_hours = restaurant_hours
-
         # BaseHTTPRequestHandler calls do_GET inside __init__
         # so required fields must be set before calling super
         # More details here: https://tinyurl.com/mr27s2hw
+        self.restaurant_hours = restaurant_hours
         super().__init__(*args, **kwargs)
     
-    def do_HEAD(self):
+    def do_HEAD(self, content_length=0):
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
+        # Set the Content-Length header if content length is provided
+        if content_length > 0:
+            self.send_header('Content-Length', str(content_length))
         self.end_headers()
 
     def do_GET(self):
-        if self.path == '/restaurants':
-            self.do_HEAD()
-            response_data = self.restaurant_hours
+        parsed_path = urlparse(self.path)
+        path = parsed_path.path
+
+        if path == '/restaurants':
+            query_params = parse_qs(parsed_path.query)
+            datetime_param = query_params.get('datetime', [''])[0]
+            # response_data = self.restaurant_hours
+            response_data = {'datetime_received': datetime_param}
             json_response = json.dumps(response_data)
+
+            # Calculate the content length
+            content_length = len(json_response.encode())
+            
+            self.do_HEAD(content_length=content_length)
             self.wfile.write(json_response.encode())
 
 
