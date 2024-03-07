@@ -24,11 +24,11 @@ def load_restaurant_hours(filename):
     return restaurant_hours
 
 class RequestHandler(BaseHTTPRequestHandler):
-    def __init__(self, restaurants, *args, **kwargs):
-        self.restaurants = restaurants
+    def __init__(self, restaurant_hours, *args, **kwargs):
+        self.restaurant_hours = restaurant_hours
 
-        # BaseHTTPRequestHandler calls do_GET insideinit
-        # Required fields must be set before calling super
+        # BaseHTTPRequestHandler calls do_GET inside __init__
+        # so required fields must be set before calling super
         # More details here: https://tinyurl.com/mr27s2hw
         super().__init__(*args, **kwargs)
     
@@ -40,14 +40,13 @@ class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/restaurants':
             self.do_HEAD()
-            response_data = {'x': 'z'}
+            response_data = self.restaurant_hours
             json_response = json.dumps(response_data)
             self.wfile.write(json_response.encode())
 
 
 def run(server_class=HTTPServer, handler_class=RequestHandler, port=3000, data=None):
-    # Using partial to make the restaurant data available inside the RequestHandler
-    # An alternative to a class factory with a few advantages
+    # Using partial application as alternative to a class factory
     custom_handler = partial(handler_class, data)
     server_address = ('127.0.0.1', port)
     httpd = server_class(server_address, custom_handler)
