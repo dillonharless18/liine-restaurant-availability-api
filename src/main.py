@@ -31,14 +31,9 @@ class RequestHandler(BaseHTTPRequestHandler):
         if path == '/restaurants':
             query_params = parse_qs(parsed_path.query)
             datetime_param = query_params.get('datetime', [''])[0]
-            # response_data = {'datetime_received': datetime_param}
-            # json_response = json.dumps(response_data)
 
-            datetime_str = "2024-03-12 12:00:00"
-            open_restaurants = get_open_restaurants(self.restaurant_hours, datetime_str)
+            open_restaurants = get_open_restaurants(self.restaurant_hours, datetime_param)
             json_response = json.dumps(open_restaurants)
-
-            # Calculate the content length
             content_length = len(json_response.encode())
             
             self.do_HEAD(content_length=content_length)
@@ -46,8 +41,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 
 def run(server_class=HTTPServer, handler_class=RequestHandler, port=3000, data=None):
-    # Using partial application as alternative to a class factory
-    custom_handler = partial(handler_class, data)
+    custom_handler = partial(handler_class, data) # alternative to class factory
     server_address = ('127.0.0.1', port)
     httpd = server_class(server_address, custom_handler)
 
