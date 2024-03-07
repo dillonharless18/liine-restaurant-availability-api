@@ -91,9 +91,3 @@ def get_open_restaurants(structured_data, datetime_str):
         if start_time <= time <= end_time:
             open_restaurants.extend(restaurants)
     return open_restaurants
-
-# filepath = get_data_file_path('smaller_list_of_restaurants.csv')
-# structured_data = preprocess_data(filepath)
-# datetime_str = "2024-03-12 12:00:00"
-# open_restaurants = get_open_restaurants(structured_data, datetime_str)
-# print(f"Open restaurants at {datetime_str}: {open_restaurants}")
