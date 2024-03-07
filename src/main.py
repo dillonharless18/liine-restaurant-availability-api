@@ -6,22 +6,7 @@ from collections import defaultdict
 from socketserver import BaseServer
 from urllib.parse import urlparse, parse_qs
 from functools import partial
-
-def get_data_file_path(filename='restaurants.csv'):
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-    data_dir = os.path.join(current_dir, '..', 'data')
-    file_path = os.path.join(data_dir, filename)
-    return file_path
-
-def load_restaurant_hours(filename):
-    restaurant_hours = defaultdict(list)
-    with open(filename, newline='') as csvfile:
-        reader = csv.reader(csvfile)
-        next(reader, None)  # Skip header row
-        for row in reader:
-            name, hours = row
-            restaurant_hours[name].append(hours)
-    return restaurant_hours
+from helpers.helpers import get_data_file_path, preprocess_data, get_open_restaurants
 
 class RequestHandler(BaseHTTPRequestHandler):
     def __init__(self, restaurant_hours, *args, **kwargs):
@@ -46,9 +31,12 @@ class RequestHandler(BaseHTTPRequestHandler):
         if path == '/restaurants':
             query_params = parse_qs(parsed_path.query)
             datetime_param = query_params.get('datetime', [''])[0]
-            # response_data = self.restaurant_hours
-            response_data = {'datetime_received': datetime_param}
-            json_response = json.dumps(response_data)
+            # response_data = {'datetime_received': datetime_param}
+            # json_response = json.dumps(response_data)
+
+            datetime_str = "2024-03-12 12:00:00"
+            open_restaurants = get_open_restaurants(self.restaurant_hours, datetime_str)
+            json_response = json.dumps(open_restaurants)
 
             # Calculate the content length
             content_length = len(json_response.encode())
@@ -67,6 +55,6 @@ def run(server_class=HTTPServer, handler_class=RequestHandler, port=3000, data=N
     httpd.serve_forever()
 
 if __name__ == '__main__':
-    data_filepath = get_data_file_path()
-    restaurant_hours = load_restaurant_hours(data_filepath)
-    run(data=restaurant_hours)
+    data_filepath = get_data_file_path('smaller_list_of_restaurants.csv')
+    structured_data = preprocess_data(data_filepath)
+    run(data=structured_data)

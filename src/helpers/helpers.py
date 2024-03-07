@@ -40,14 +40,10 @@ def preprocess_data(filepath):
     with open(filepath, mode='r', encoding='utf-8') as csvfile:
         csvreader = csv.reader(csvfile)
         next(csvreader)  # Skip the header row
-        print()
         for row in csvreader:
             restaurant = row[0]
-            print(restaurant)
             hours_string = row[1]
-            print(hours_string)
             for hours_group in hours_string.split(" / "):
-                print("group: " + hours_group)
                 days  = []
                 start = None
                 end   = None
@@ -70,15 +66,9 @@ def preprocess_data(filepath):
                         days.append(day_part)
                 
                 for day_part in days:
-                    print("day_part in days")
-                    print(day_part) 
                     day_part = expand_day_range(day_part)
-                    print("expanded day_part")
-                    print(day_part)
 
                     for day in day_part:
-                        print("day in day_parts")
-                        print(day) 
                         if day not in structured_data:
                             structured_data[day] = {}
                         if (start, end) not in structured_data[day]:
@@ -87,7 +77,7 @@ def preprocess_data(filepath):
     return structured_data
 
 # Function to check if a restaurant is open
-def is_open(structured_data, datetime_str):
+def get_open_restaurants(structured_data, datetime_str):
     dt = datetime.strptime(datetime_str, '%Y-%m-%d %H:%M:%S')
     day_abbr = dt.strftime('%a')
     time = dt.time()
@@ -105,5 +95,5 @@ def is_open(structured_data, datetime_str):
 # filepath = get_data_file_path('smaller_list_of_restaurants.csv')
 # structured_data = preprocess_data(filepath)
 # datetime_str = "2024-03-12 12:00:00"
-# open_restaurants = is_open(structured_data, datetime_str)
+# open_restaurants = get_open_restaurants(structured_data, datetime_str)
 # print(f"Open restaurants at {datetime_str}: {open_restaurants}")
