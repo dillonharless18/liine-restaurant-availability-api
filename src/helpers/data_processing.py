@@ -1,5 +1,6 @@
 import csv
 import os
+import re
 from datetime import datetime
 
 def has_numbers(inputString):
@@ -108,8 +109,24 @@ def parse_hours_string(hours_string):
     return structured_hours
 
 def add_colon_if_missing(time_string):
-    '''Ensures time strings are in the 'HH:MM' format.'''
-    return time_string if ":" in time_string else time_string.replace(" ", ":00 ")
+    '''Ensures time strings are in the 'HH:MM' format or raises an exception.'''
+    
+    # Regular expression to match time formats like "10 am" or "5 pm "
+    time_string = time_string.strip()
+
+    if ":" in time_string: 
+        # Handle 'HH:MM am/pm'
+        time_pattern = re.compile(r'\b([1-9]|1[0-2]):([0-5][0-9])\s*(am|pm)\b', re.IGNORECASE)
+        if time_pattern.match(time_string): 
+            return time_string
+    
+    # Handle 'HH am/pm'
+    time_pattern = re.compile(r'\b(0?[1-9]|1[0-2])\s*(am|pm)\b', re.IGNORECASE)
+    if time_pattern.match(time_string):
+        return time_string.replace(" ", ":00 ")
+    else:
+        raise ValueError(f"Invalid time format: '{time_string}'. Expected format: 'HH am/pm' or 'HH:MM am/pm'.")
+
 
 def update_structured_data(structured_data, restaurant, structured_hours):
     '''
