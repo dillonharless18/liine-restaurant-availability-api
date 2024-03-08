@@ -21,19 +21,28 @@ class RequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        parsed_path = urlparse(self.path)
-        path = parsed_path.path
+        try:
+            parsed_path = urlparse(self.path)
+            path = parsed_path.path
 
-        if path == '/restaurants':
-            query_params = parse_qs(parsed_path.query)
-            datetime_param = query_params.get('datetime', [''])[0]
+            if path == '/restaurants':
+                query_params = parse_qs(parsed_path.query)
+                datetime_param = query_params.get('datetime', [''])[0]
 
-            open_restaurants = get_open_restaurants(self.restaurant_hours, datetime_param)
-            json_response = json.dumps(open_restaurants)
-            content_length = len(json_response.encode())
-            
-            self.do_HEAD(content_length=content_length)
-            self.wfile.write(json_response.encode())
+                open_restaurants = get_open_restaurants(self.restaurant_hours, datetime_param)
+                json_response = json.dumps(open_restaurants)
+                content_length = len(json_response.encode())
+                
+                self.do_HEAD(content_length=content_length)
+                self.wfile.write(json_response.encode())
+        except Exception as e:
+            print(f"Error handling request: {e}")
+
+            self.send_response(500)
+            self.send_header('Content-type', 'application/json')
+            self.end_headers()
+            error_message = json.dumps({'error': 'Internal Server Error'})
+            self.wfile.write(error_message.encode())
 
 def run(server_class=HTTPServer, handler_class=RequestHandler, port=3000, data=None):
     custom_handler = partial(handler_class, data) # alternative to class factory

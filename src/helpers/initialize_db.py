@@ -41,7 +41,6 @@ def initialize_db(filepath):
         return (expanded_days, open_time, close_time)
         
     # TODO See how I can make this cleaner - going to hold off on this in interest of time
-    # TODO Add Docstrings
     with open(filepath, newline='') as csvfile:
         reader = csv.reader(csvfile)
         next(reader, None)  # Skip the header row
