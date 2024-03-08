@@ -20,6 +20,13 @@ class RequestHandler(BaseHTTPRequestHandler):
         # More details here: https://tinyurl.com/mr27s2hw
         self.db_connection = db_connection
         super().__init__(*args, **kwargs)
+
+    def send_error_response(self, status_code, message):
+        self.send_response(status_code)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+        response = {'error': message}
+        self.wfile.write(json.dumps(response).encode())
     
     def do_HEAD(self, content_length=0):
         self.send_response(200)
@@ -47,12 +54,8 @@ class RequestHandler(BaseHTTPRequestHandler):
 
         except Exception as e:
             print(f"Error handling request: {e}")
-
-            self.send_response(500)
-            self.send_header('Content-type', 'application/json')
-            self.end_headers()
-            error_message = json.dumps({'error': 'Internal Server Error'})
-            self.wfile.write(error_message.encode())
+            # TODO - After enhancing error handling, can send appropriate messages back to client as well
+            self.send_error_response(500, 'Internal Server Error')
 
 
 def run(server_class=HTTPServer, handler_class=RequestHandler, port=3000, connection=None):
