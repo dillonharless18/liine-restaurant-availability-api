@@ -32,16 +32,19 @@ class RequestHandler(BaseHTTPRequestHandler):
             parsed_path = urlparse(self.path)
             path = parsed_path.path
 
-            if path == '/restaurants':
-                query_params = parse_qs(parsed_path.query)
-                datetime_param = query_params.get('datetime', [''])[0]
+            if path != '/restaurants':
+                self.send_error_response(404, 'Not Found')
+                return
 
-                open_restaurants = get_open_restaurants(self.restaurant_hours, datetime_param)
-                json_response = json.dumps(open_restaurants)
-                content_length = len(json_response.encode())
-                
-                self.do_HEAD(content_length=content_length)
-                self.wfile.write(json_response.encode())
+            query_params = parse_qs(parsed_path.query)
+            datetime_param = query_params.get('datetime', [''])[0]
+
+            open_restaurants = get_open_restaurants(self.restaurant_hours, datetime_param)
+            json_response = json.dumps(open_restaurants)
+            content_length = len(json_response.encode())
+            
+            self.do_HEAD(content_length=content_length)
+            self.wfile.write(json_response.encode())
         except Exception as e:
             print(f"Error handling request: {e}")
             # TODO - After enhancing error handling, can send appropriate messages back to client as well
