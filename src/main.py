@@ -1,12 +1,9 @@
-import csv
-import os
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from collections import defaultdict
-from socketserver import BaseServer
 from urllib.parse import urlparse, parse_qs
 from functools import partial
-from helpers.helpers import get_data_file_path, preprocess_data, get_open_restaurants
+from helpers.data_processing import get_data_file_path, preprocess_data
+from helpers.query import get_open_restaurants
 
 class RequestHandler(BaseHTTPRequestHandler):
     def __init__(self, restaurant_hours, *args, **kwargs):
@@ -45,6 +42,7 @@ def run(server_class=HTTPServer, handler_class=RequestHandler, port=3000, data=N
     server_address = ('127.0.0.1', port)
     httpd = server_class(server_address, custom_handler)
 
+    print(structured_data)
     print(f'Serving HTTP on port {port}...')
     httpd.serve_forever()
 
