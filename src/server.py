@@ -12,6 +12,13 @@ class RequestHandler(BaseHTTPRequestHandler):
         # More details here: https://tinyurl.com/mr27s2hw
         self.restaurant_hours = restaurant_hours
         super().__init__(*args, **kwargs)
+
+    def send_error_response(self, status_code, message):
+        self.send_response(status_code)
+        self.send_header('Content-type', 'application/json')
+        self.end_headers()
+        response = {'error': message}
+        self.wfile.write(json.dumps(response).encode())
     
     def do_HEAD(self, content_length=0):
         self.send_response(200)
@@ -37,19 +44,15 @@ class RequestHandler(BaseHTTPRequestHandler):
                 self.wfile.write(json_response.encode())
         except Exception as e:
             print(f"Error handling request: {e}")
+            # TODO - After enhancing error handling, can send appropriate messages back to client as well
+            self.send_error_response(500, 'Internal Server Error')
 
-            self.send_response(500)
-            self.send_header('Content-type', 'application/json')
-            self.end_headers()
-            error_message = json.dumps({'error': 'Internal Server Error'})
-            self.wfile.write(error_message.encode())
 
 def run(server_class=HTTPServer, handler_class=RequestHandler, port=3000, data=None):
-    custom_handler = partial(handler_class, data) # alternative to class factory
+    custom_handler = partial(handler_class, data) # alternative to class factory - makes extra args availabe to the RequestHandler
     server_address = ('0.0.0.0', port)
     httpd = server_class(server_address, custom_handler)
 
-    print(structured_data)
     print(f'Serving HTTP on port {port}...')
     httpd.serve_forever()
 

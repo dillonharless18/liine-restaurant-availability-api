@@ -56,7 +56,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 
 def run(server_class=HTTPServer, handler_class=RequestHandler, port=3000, connection=None):
-    custom_handler = partial(handler_class, connection) # alternative to class factory
+    custom_handler = partial(handler_class, connection)
     server_address = ('0.0.0.0', port)
     httpd = server_class(server_address, custom_handler)
 

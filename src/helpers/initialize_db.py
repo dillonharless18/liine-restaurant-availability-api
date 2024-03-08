@@ -59,14 +59,11 @@ def initialize_db(filepath):
                     if close_time <= open_time:
                         # hours cross midnight, split amongst the day and the succeeding date
                         next_day = get_next_day(day)
-                        print('inserting: {}, {}, {}, {}'.format(name, day, open_time_str, MIDNIGHT_CLOSE_TIME))
                         c.execute(query_string,
                                 (name, day, open_time_str, MIDNIGHT_CLOSE_TIME))
-                        print('inserting: {}, {}, {}, {}'.format(name, next_day, MIDNIGHT_OPEN_TIME, close_time_str))
                         c.execute(query_string,
                                 (name, next_day, MIDNIGHT_OPEN_TIME, close_time_str))
                     else:
-                        print('inserting: {}, {}, {}, {}'.format(name, day, open_time_str, close_time_str))
                         c.execute(query_string,
                                 (name, day, open_time_str, close_time_str))
 
