@@ -8,6 +8,16 @@ MIDNIGHT_CLOSE_TIME = '23:59:00'
 MIDNIGHT_OPEN_TIME  = '00:00:00'
 
 def initialize_db(filepath):
+    '''
+    Initializes the database and imports restaurant opening hours from a CSV file.
+    
+    This function creates a new SQLite database named 'restaurants.db'. It reads a CSV file specified by the 'filepath' parameter, 
+    parses the opening hours, and inserts the data into the database. It handles cases where restaurant hours span past midnight 
+    by splitting the entry intotwo records.
+    
+    Parameters:
+        filepath (str): The file path to the CSV file containing restaurant names and their corresponding opening hours.
+    '''
     conn = sqlite3.connect('restaurants.db')
     c = conn.cursor()
 
@@ -30,7 +40,7 @@ def initialize_db(filepath):
 
         return (expanded_days, open_time, close_time)
         
-    # TODO See how I can make this cleaner
+    # TODO See how I can make this cleaner - going to hold off on this in interest of time
     # TODO Add Docstrings
     with open(filepath, newline='') as csvfile:
         reader = csv.reader(csvfile)
