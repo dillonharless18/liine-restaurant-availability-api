@@ -19,15 +19,10 @@ To set up and run the Liine API Service, follow these steps:
     source venv/bin/activate  # On Windows use `venv\Scripts\activate`
     ```
 
-3. **Install Dependencies**
-    ```
-    pip install -r requirements.txt
-    ```
+3. **Set Up Environment Variables**
+    If you would like to use the version of this that uses a SQLite database, create a `.env.` file and set `USE_DB=1`
 
-4. **Set Up Environment Variables**
-    Create a `.env` file in the project root directory and add any necessary environment variables.
-
-5. **Run the Application**
+4. **Run the Application**
     ```
     python app.py
     ```
@@ -58,12 +53,17 @@ To run the Liine API Service in a Docker container, use the included `Dockerfile
 
 1. **Build the Docker Image**
     ```
-    docker build -t liine-restaurant-availability-api-dillon-harless .
+    docker build -t liine-restaurants .
     ```
 
 2. **Run the Container**
     ```
-    docker run -p 5000:5000 liine-restaurant-availability-api-dillon-harless
+    docker run -p 3000:3000 liine-restaurants
     ```
 
-This will start the API service inside a Docker container, accessible on port 5000.
+This will start the API service inside a Docker container, accessible on port 3000.
+
+**If you would like to use the database instead of the in-memory datastore, run the following command**
+    ```
+    docker run -p 3000:3000 -e USE_DB false liine-restaurant-availability-api-dillon-harless
+    ```

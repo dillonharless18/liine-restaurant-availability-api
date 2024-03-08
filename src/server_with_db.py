@@ -46,14 +46,14 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 def run(server_class=HTTPServer, handler_class=RequestHandler, port=3000, connection=None):
     custom_handler = partial(handler_class, connection) # alternative to class factory
-    server_address = ('127.0.0.1', port)
+    server_address = ('0.0.0.0', port)
     httpd = server_class(server_address, custom_handler)
 
     print(f'Serving HTTP on port {port}...')
     httpd.serve_forever()
 
 if __name__ == '__main__':
-    data_filepath = get_data_file_path('smaller_list_of_restaurants.csv')
+    data_filepath = get_data_file_path('restaurants.csv')
     initialize_db(data_filepath)
     print('Database initialized...')
     conn = sqlite3.connect('restaurants.db')

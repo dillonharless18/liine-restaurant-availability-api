@@ -2,8 +2,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from urllib.parse import urlparse, parse_qs
 from functools import partial
-from .helpers.data_processing import get_data_file_path, preprocess_data
-from .helpers.query import get_open_restaurants
+from helpers.data_processing import get_data_file_path, preprocess_data
+from helpers.query import get_open_restaurants
 
 class RequestHandler(BaseHTTPRequestHandler):
     def __init__(self, restaurant_hours, *args, **kwargs):
@@ -37,7 +37,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
 def run(server_class=HTTPServer, handler_class=RequestHandler, port=3000, data=None):
     custom_handler = partial(handler_class, data) # alternative to class factory
-    server_address = ('127.0.0.1', port)
+    server_address = ('0.0.0.0', port)
     httpd = server_class(server_address, custom_handler)
 
     print(structured_data)
@@ -45,6 +45,6 @@ def run(server_class=HTTPServer, handler_class=RequestHandler, port=3000, data=N
     httpd.serve_forever()
 
 if __name__ == '__main__':
-    data_filepath = get_data_file_path('smaller_list_of_restaurants.csv')
+    data_filepath = get_data_file_path('restaurants.csv')
     structured_data = preprocess_data(data_filepath)
     run(data=structured_data)
