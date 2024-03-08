@@ -1,4 +1,6 @@
 from datetime import datetime
+import sqlite3
+from contextlib import closing
 
 # '%a' looks for Tue instead of Tues - used when checking open restaurants
 # Another option is to replace it in the dataset which has the benefit of 
@@ -32,19 +34,24 @@ def get_open_restaurants(structured_data, datetime_str):
     return open_restaurants
 
 
-def get_open_restaurants_from_db(connection, datetime_str):
+
+def get_open_restaurants_from_db(conn, datetime_str):
     '''Main function used to get restaurants from local db.'''
     dt = datetime.strptime(datetime_str, '%Y-%m-%dT%H:%M:%S')
+    dt = dt.replace(second=0)
     day_abbr = dt.strftime('%a')
-    time_str = dt.strftime('%H:%M')
+    time_str = dt.strftime('%H:%M:%S')
     day = day_map.get(day_abbr)
+    print(day)
+    print(time_str)
 
     open_restaurants = []
-    with connection.cursor() as cursor:
+    with closing(conn.cursor()) as cursor:
         query = '''
         SELECT name FROM restaurant_hours
         WHERE day = ? AND open_time <= ? AND close_time >= ?
         '''
+
         cursor.execute(query, (day, time_str, time_str))
         open_restaurants = [row[0] for row in cursor.fetchall()]
 

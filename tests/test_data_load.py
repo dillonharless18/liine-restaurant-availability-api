@@ -2,7 +2,7 @@ import unittest
 from collections import defaultdict
 import csv
 import os
-from src.main import load_restaurant_hours
+from src.server import load_restaurant_hours
 
 class TestLoadRestaurantHours(unittest.TestCase):
 

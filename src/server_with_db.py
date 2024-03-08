@@ -1,3 +1,8 @@
+import sys
+import os
+import atexit
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from urllib.parse import urlparse, parse_qs
@@ -7,12 +12,13 @@ from helpers.initialize_db import initialize_db
 from helpers.query import get_open_restaurants_from_db
 import sqlite3
 
+
 class RequestHandler(BaseHTTPRequestHandler):
-    def __init__(self, connection, *args, **kwargs):
+    def __init__(self, db_connection, *args, **kwargs):
         # BaseHTTPRequestHandler calls do_GET inside __init__
         # so required fields must be set before calling super
         # More details here: https://tinyurl.com/mr27s2hw
-        self.connection = connection
+        self.db_connection = db_connection
         super().__init__(*args, **kwargs)
     
     def do_HEAD(self, content_length=0):
@@ -30,15 +36,16 @@ class RequestHandler(BaseHTTPRequestHandler):
             query_params = parse_qs(parsed_path.query)
             datetime_param = query_params.get('datetime', [''])[0]
 
-            open_restaurants = get_open_restaurants_from_db(self.connection, datetime_param)
+            print(type(self.db_connection))
+            open_restaurants = get_open_restaurants_from_db(self.db_connection, datetime_param)
             json_response = json.dumps(open_restaurants)
             content_length = len(json_response.encode())
             
             self.do_HEAD(content_length=content_length)
             self.wfile.write(json_response.encode())
 
-def run(server_class=HTTPServer, handler_class=RequestHandler, port=3000):
-    custom_handler = partial(handler_class) # alternative to class factory
+def run(server_class=HTTPServer, handler_class=RequestHandler, port=3000, connection=None):
+    custom_handler = partial(handler_class, connection) # alternative to class factory
     server_address = ('127.0.0.1', port)
     httpd = server_class(server_address, custom_handler)
 
@@ -50,4 +57,5 @@ if __name__ == '__main__':
     initialize_db(data_filepath)
     print('Database initialized...')
     conn = sqlite3.connect('restaurants.db')
-    run(conn)
+    atexit.register(conn.close) # should close the connection upon termination
+    run(connection=conn)

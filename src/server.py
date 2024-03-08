@@ -2,8 +2,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from urllib.parse import urlparse, parse_qs
 from functools import partial
-from helpers.data_processing import get_data_file_path, preprocess_data
-from helpers.query import get_open_restaurants
+from .helpers.data_processing import get_data_file_path, preprocess_data
+from .helpers.query import get_open_restaurants
 
 class RequestHandler(BaseHTTPRequestHandler):
     def __init__(self, restaurant_hours, *args, **kwargs):
@@ -16,7 +16,6 @@ class RequestHandler(BaseHTTPRequestHandler):
     def do_HEAD(self, content_length=0):
         self.send_response(200)
         self.send_header('Content-type', 'application/json')
-        # Set the Content-Length header if content length is provided
         if content_length > 0:
             self.send_header('Content-Length', str(content_length))
         self.end_headers()
