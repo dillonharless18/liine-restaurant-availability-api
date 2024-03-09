@@ -112,6 +112,7 @@ class TestHelpersDataProcessing(unittest.TestCase):
     ######################################
         
     def test_update_structured_data_add_single_restaurant_hours_not_crossing_midnight(self):
+        self.maxDiff = None
         structured_data = {}
         restaurant = "Test Diner"
         structured_hours = [(["Mon"], "9:00 am", "5:00 pm")]
