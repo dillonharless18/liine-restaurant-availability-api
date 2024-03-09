@@ -1,7 +1,15 @@
-# Liine API Service
+# Liine Restaurant API Service
 
 ## Project Description
-The Liine API Service is a Python-based project designed to provide information about restaurant availability. Given a datetime string as input, the API endpoint returns a list of restaurants open at the specified date and time. The system is built with a focus on correctness, with optimization being a secondary goal.
+The Liine Restaurant API Service is a Python-based project designed to provide information about restaurant availability. It uses only the Python standard library and has no external dependencies. Given a datetime string as input, the API endpoint returns a list of restaurants open at the specified date and time. The system is built with a focus on correctness, with optimization being a secondary goal. 
+
+The data exists in the repository under `data/` folder in the given `csv` format. The project parses the human-readable data and stores it in 1 of 2 ways, depending on which server you choose to run. There are two server options.
+
+`server.py` uses an in-memory data structure to store the parsed data. 
+
+`server_with_db.py` stores the data in a SQLite database.
+
+The two servers use somewhat different logic to parse the data. `server.py` explores parsing the data in a more direct logic-driven manner based on the patterns I recognized in the data, while `server_with_db.py` leverages regular expressions to extract the data based on the patterns. The code in `server.py` is admittedly more complex, therefore I paid extra attention to docstrings, tests, and modularity in there. In the interest of time, once I got `server_with_db.py` working I didn't focus as much on modularity in that one.
 
 ## Setup and Installation
 
@@ -9,7 +17,7 @@ To set up and run the Liine API Service, follow these steps:
 
 1. **Clone the Repository**
     ```
-    git clone https://github.com/your-repository/liine-api-service.git
+    git clone git@github.com:dillonharless18/liine-restaurant-availability-api.git
     cd liine-api-service
     ```
 
