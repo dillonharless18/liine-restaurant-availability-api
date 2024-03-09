@@ -156,9 +156,9 @@ def update_structured_data(structured_data, restaurant, structured_hours):
 
             # This handles restaurants whose hours span midnight
             if datetime.strptime(preserved_start, '%I:%M %p').time() > datetime.strptime(preserved_end, '%I:%M %p').time():
-                add_restaurant(day, preserved_start, '11:59 PM')
+                add_restaurant(day, preserved_start, '11:59 pm')
                 next_day = get_next_day(day)  # Function to get the next day of the week
-                add_restaurant(next_day, '12:00 AM', preserved_end)
+                add_restaurant(next_day, '12:00 am', preserved_end)
             else:
                 add_restaurant(day, preserved_start, preserved_end)
 

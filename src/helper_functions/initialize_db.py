@@ -23,7 +23,7 @@ def initialize_db(filepath):
 
     c.execute('''CREATE TABLE IF NOT EXISTS restaurant_hours
                 (name TEXT, day TEXT, open_time TEXT, close_time TEXT)''')
-    c.execute('DELETE FROM restaurant_hours')
+    c.execute('DELETE FROM restaurant_hours')  # refreshing db every time
     
     def parse_hours(hours_str):
         days_pattern = r'\b(?:Mon|Tues|Wed|Thu|Fri|Sat|Sun)(?:-(?:Mon|Tues|Wed|Thu|Fri|Sat|Sun))?\b'
@@ -43,7 +43,7 @@ def initialize_db(filepath):
     # TODO See how I can make this cleaner - going to hold off on this in interest of time
     with open(filepath, newline='') as csvfile:
         reader = csv.reader(csvfile)
-        next(reader, None)  # Skip the header row
+        next(reader, None)  # skipping header row
         for row in reader:
             name, hours = row
             for hours_string in hours.split('/'):
@@ -67,7 +67,5 @@ def initialize_db(filepath):
                         c.execute(query_string,
                                 (name, day, open_time_str, close_time_str))
 
-
-    # Commit and close
     conn.commit()
     conn.close()
