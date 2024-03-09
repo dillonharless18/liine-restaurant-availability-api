@@ -85,8 +85,12 @@ def run(server_class=HTTPServer, handler_class=RequestHandler, port=3000, connec
     server_address = ('0.0.0.0', port)
     httpd = server_class(server_address, custom_handler)
 
-    print(f'Serving HTTP on port {port}...')
-    httpd.serve_forever()
+    try:
+        print(f'Serving HTTP on port {port}...')
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        print("\nServer stopped by user.")
+        httpd.shutdown()
 
 if __name__ == '__main__':
     data_filepath = get_data_file_path('restaurants.csv')
