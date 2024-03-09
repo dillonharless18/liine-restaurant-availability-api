@@ -2,10 +2,14 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from urllib.parse import urlparse, parse_qs
 from functools import partial
-from helpers.data_processing import get_data_file_path, preprocess_data
-from helpers.query import get_open_restaurants
+from helper_functions.data_processing import get_data_file_path, preprocess_data
+from helper_functions.query import get_open_restaurants
+from helper_functions.utility_functions import validate_datetime
+from rate_limiter.rate_limiter import RateLimiter
 
 class RequestHandler(BaseHTTPRequestHandler):
+    rate_limiter = RateLimiter(100, 600)
+
     def __init__(self, restaurant_hours, *args, **kwargs):
         # BaseHTTPRequestHandler calls do_GET inside __init__
         # so required fields must be set before calling super
@@ -29,6 +33,12 @@ class RequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         try:
+            # simple rate limiting
+            client_ip = self.client_address[0]
+            if not self.rate_limiter.is_allowed(client_ip):
+                self.send_error_response(429, 'Too Many Requests')
+                return
+            
             parsed_path = urlparse(self.path)
             path = parsed_path.path
 
@@ -38,6 +48,10 @@ class RequestHandler(BaseHTTPRequestHandler):
 
             query_params = parse_qs(parsed_path.query)
             datetime_param = query_params.get('datetime', [''])[0]
+
+            if not validate_datetime(datetime_param):
+                self.send_error_response(400, 'Invalid datetime format. Please use YYYY-MM-DDTHH:MM:SS format.')
+                return
 
             open_restaurants = get_open_restaurants(self.restaurant_hours, datetime_param)
             json_response = json.dumps(open_restaurants)

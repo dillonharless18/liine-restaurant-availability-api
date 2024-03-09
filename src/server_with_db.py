@@ -4,16 +4,21 @@ import atexit
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from collections import defaultdict
 import json
 from urllib.parse import urlparse, parse_qs
 from functools import partial
-from helpers.data_processing import get_data_file_path
-from helpers.initialize_db import initialize_db
-from helpers.query import get_open_restaurants_from_db
+from helper_functions.data_processing import get_data_file_path
+from helper_functions.initialize_db import initialize_db
+from helper_functions.query import get_open_restaurants_from_db
+from helper_functions.utility_functions import validate_datetime
 import sqlite3
+from rate_limiter.rate_limiter import RateLimiter
 
 
 class RequestHandler(BaseHTTPRequestHandler):
+    rate_limiter = RateLimiter(100, 600)
+
     def __init__(self, db_connection, *args, **kwargs):
         # BaseHTTPRequestHandler calls do_GET inside __init__
         # so required fields must be set before calling super
@@ -37,6 +42,12 @@ class RequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         try:
+            # simple rate limiting
+            client_ip = self.client_address[0]
+            if not self.rate_limiter.is_allowed(client_ip):
+                self.send_error_response(429, 'Too Many Requests')
+                return
+            
             parsed_path = urlparse(self.path)
             path = parsed_path.path
 
@@ -46,6 +57,10 @@ class RequestHandler(BaseHTTPRequestHandler):
             
             query_params = parse_qs(parsed_path.query)
             datetime_param = query_params.get('datetime', [''])[0]
+
+            if not validate_datetime(datetime_param):
+                self.send_error_response(400, 'Invalid datetime format. Please use YYYY-MM-DDTHH:MM:SS format.')
+                return
 
             open_restaurants = get_open_restaurants_from_db(self.db_connection, datetime_param)
 
