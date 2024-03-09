@@ -6,13 +6,10 @@ WORKDIR /usr/src
 # Copy the current directory contents into the container at /usr/src/app
 COPY . .
 
-# For now this project doesn't rely on any third party packages
-# RUN pip install --no-cache-dir -r requirements.txt
-
 # Make port 3000 available to the world outside this container
 EXPOSE 3000
 
-# Define environment variable
+# Define environment variable used for selecting which server to run inside the container, one with a db or one with an in-memory data structure.
 ENV USE_DB 0
 
 CMD ["python", "-u", "./src/server.py"]
