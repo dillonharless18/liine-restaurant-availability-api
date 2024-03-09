@@ -116,7 +116,6 @@ def parse_hours_string(hours_string):
 def add_colon_if_missing(time_string):
     '''Ensures time strings are in the 'HH:MM' format or raises an exception.'''
     
-    # Regular expression to match time formats like "10 am" or "5 pm "
     time_string = time_string.strip()
 
     if ":" in time_string: 
@@ -182,7 +181,34 @@ def get_next_day(day):
     return days_of_week[next_day_index]
 
 def preprocess_data(filepath):
-    '''Main function to preprocess data from the given CSV file.'''
+    '''
+    Main function that processes restaurant opening hours data from a CSV file and structures it by days and opening times.
+
+    This function reads restaurant data from a CSV file where each row contains the restaurant's name and its opening hours. 
+    It parses the opening hours into a structured format and adds them to a dict. The dict's keys are days of the week. Each day's value
+    is another dict which is keyed by tuples. The tuples are of the format (opening_time, closing_time). Each tuple's value is a list
+    of restaurants.
+
+    Args:
+    filepath (str): The path to the CSV file containing restaurant data.
+
+    Returns:
+    dict: A dictionary where each key is a day of the week and each value is another dictionary with time slots
+          as keys and lists of restaurant names as values. This structure supports the access pattern of looking up
+          open restaurants by date and time.
+
+          Example: 
+          {
+            'Mon': { 
+                ('11:00 am', '11:00 pm'): ['Page Road Grill', ...] 
+                ... 
+            },
+            'Tues': {
+                ...
+            },
+            ...
+          }
+    '''
     structured_data = {}
     for row in read_csv(filepath):
         restaurant, hours_string = row
