@@ -23,16 +23,18 @@ To set up and run the Liine API Service, follow these steps:
 
 2. **Create and Activate Virtual Environment** (optional but recommended)
     ```
-    python -m venv venv
+    python -m venv venv # I usually make these in my home directory under a folder called `.venvs`
     source venv/bin/activate  # On Windows use `venv\Scripts\activate`
     ```
-
-3. **Set Up Environment Variables**
-    If you would like to use the version of this that uses a SQLite database, create a `.env.` file and set `USE_DB=1`
-
-4. **Run the Application**
+3. **Run the Application**
     ```
-    python app.py
+    python src/server.py
+    ```
+
+    or
+
+    ```
+    python src/server_with_db.py
     ```
 
 ## Usage Examples
@@ -40,20 +42,18 @@ To set up and run the Liine API Service, follow these steps:
 To use the API, send a GET request to the endpoint with the datetime parameter:
 
     ```
-    GET /restaurants?datetime=2023-03-15T18:00:00
+    GET http://127.0.0.1:3000/restaurants?datetime=2024-03-09T14:00:00
     ```
 
 
-This will return a JSON response with a list of open restaurants at the given datetime.
+This will return a JSON response with a list of open restaurants at the given datetime or it will return an appropriate error.
 
 ## How to Run Tests
 
 To run the test suite, execute the following command:
 
-python -m unittest discover -s tests
+python -m unittest
 
-
-This will discover and run all tests in the `tests` directory. 
 
 ## Docker Support
 
