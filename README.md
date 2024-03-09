@@ -69,9 +69,10 @@ To run the Liine API Service in a Docker container, use the included `Dockerfile
     docker run -p 3000:3000 liine-restaurants
     ```
 
-This will start the API service inside a Docker container, accessible on port 3000.
+    Or if you would like to use the database version instead of the in-memory datastore run the following command:
 
-**If you would like to use the database instead of the in-memory datastore, run the following command**
     ```
-    docker run -p 3000:3000 -e USE_DB 1 liine-restaurants
+    docker run -p 3000:3000 -e USE_DB=1 liine-restaurants
     ```
+
+This will start the API service inside a Docker container, accessible on port 3000.
