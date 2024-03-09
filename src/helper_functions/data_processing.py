@@ -92,25 +92,25 @@ def parse_hours_string(hours_string):
     for days_and_hours_string in hours_string.split(" / "):
         days_and_hours_string = days_and_hours_string.strip()
         
-        days_list = []
+        final_days_list = []
+        days_with_optional_ranges = []
         opening_time = None
         closing_time = None
         days_segment = None
 
         parts = days_and_hours_string.rsplit(' ', 5)  # splitting from the right always gives us [days_str, open_time, am/pm, '-', closing_time, am/pm]
         days_and_hours = (parts[0], parts[1] + ' ' + parts[2], parts[4] + ' ' + parts[5])
-        print(days_and_hours)
 
         days_segment, opening_time, closing_time = days_and_hours
-        days_with_optional_ranges = []
         days_with_optional_ranges = days_with_optional_ranges + days_segment.strip().replace(" ","").split(",")
         
         for i in range(len(days_with_optional_ranges)):
-            days_list = days_list + expand_day_range(days_with_optional_ranges[i])
+            final_days_list = final_days_list + expand_day_range(days_with_optional_ranges[i])
+
         opening_time = add_colon_if_missing(opening_time)
         closing_time = add_colon_if_missing(closing_time)
-        structured_hours.append((days_list, opening_time, closing_time))
-        
+        structured_hours.append((final_days_list, opening_time, closing_time))
+
     return structured_hours
 
 def add_colon_if_missing(time_string):
