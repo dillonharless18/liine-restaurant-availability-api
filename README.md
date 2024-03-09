@@ -17,8 +17,8 @@ To set up and run the Liine API Service, follow these steps:
 
 1. **Clone the Repository**
     ```
-    git clone git@github.com:dillonharless18/liine-restaurant-availability-api.git
-    cd liine-api-service
+    git clone https://github.com/dillonharless18/liine-restaurant-availability-api.git
+    cd liine-restaurant-availability-api
     ```
 
 2. **Create and Activate Virtual Environment** (optional but recommended)
