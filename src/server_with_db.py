@@ -56,7 +56,11 @@ class RequestHandler(BaseHTTPRequestHandler):
                 return
             
             query_params = parse_qs(parsed_path.query)
-            datetime_param = query_params.get('datetime', [''])[0]
+            datetime_param = query_params.get('datetime', [None])[0]
+
+            if not datetime_param:
+                self.send_error_response(400, 'Query parameter `datetime` is required. Please use YYYY-MM-DDTHH:MM:SS format.')
+                return
 
             if not validate_datetime(datetime_param):
                 self.send_error_response(400, 'Invalid datetime format. Please use YYYY-MM-DDTHH:MM:SS format.')
