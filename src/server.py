@@ -48,7 +48,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
             query_params = parse_qs(parsed_path.query)
             datetime_param = query_params.get('datetime', [None])[0]
-            
+
             if not datetime_param:
                 self.send_error_response(400, 'Query parameter `datetime` is required. Please use YYYY-MM-DDTHH:MM:SS format.')
                 return
@@ -74,10 +74,16 @@ def run(server_class=HTTPServer, handler_class=RequestHandler, port=3000, data=N
     server_address = ('0.0.0.0', port)
     httpd = server_class(server_address, custom_handler)
 
-    print(f'Serving HTTP on port {port}...')
-    httpd.serve_forever()
+    try:
+        print(f'Serving HTTP on port {port}...')
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        print("\nServer stopped by user.")
+        httpd.shutdown()
 
 if __name__ == '__main__':
     data_filepath = get_data_file_path('restaurants.csv')
     structured_data = preprocess_data(data_filepath)
     run(data=structured_data)
+
+    
