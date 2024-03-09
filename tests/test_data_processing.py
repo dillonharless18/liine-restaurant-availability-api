@@ -79,19 +79,25 @@ class TestHelpersDataProcessing(unittest.TestCase):
         expected_output = [(['Mon'], '12:00 pm', '10:00 pm')]
         self.assertEqual(parse_hours_string(input_string), expected_output)
     
-    def test_parse_hours_string_with_two_separate_days(self):
+    def test_parse_hours_string_with_two_separate_days_in_same_day_group(self):
         input_string = "Mon, Fri 3:00 am - 7:00 am"
         expected_output = [
-            (['Mon'], '3:00 am', '7:00 am'),
-            (['Fri'], '3:00 am', '7:00 am')
+            (['Mon', 'Fri'], '3:00 am', '7:00 am'),
         ]
         self.assertEqual(parse_hours_string(input_string), expected_output)
 
-    def test_parse_hours_string_with_date_range_and_two_separate_days(self):
+    def test_parse_hours_string_with_date_range_and_two_separate_days_in_same_day_group(self):
         input_string = "Mon-Thu, Sun 11 am - 10 pm"
         expected_output = [
-            (['Mon', 'Tues', 'Wed', 'Thu'], '11:00 am', '10:00 pm'),
-            (['Sun'], '11:00 am', '10:00 pm')
+            (['Mon', 'Tues', 'Wed', 'Thu', 'Sun'], '11:00 am', '10:00 pm'),
+        ]
+        self.assertEqual(parse_hours_string(input_string), expected_output)
+
+    def test_parse_hours_string_with_date_range_two_day_groups(self):
+        input_string = "Mon-Thu, Sun 11:30 am - 9:30 pm  / Fri-Sat 11:30 am - 10 pm"
+        expected_output = [
+            (['Mon', 'Tues', 'Wed', 'Thu', 'Sun'], '11:30 am', '9:30 pm'),
+            (['Fri', 'Sat'], '11:30 am', '10:00 pm'),
         ]
         self.assertEqual(parse_hours_string(input_string), expected_output)
     
@@ -106,6 +112,7 @@ class TestHelpersDataProcessing(unittest.TestCase):
     ######################################
         
     def test_update_structured_data_add_single_restaurant_hours_not_crossing_midnight(self):
+        self.maxDiff = None
         structured_data = {}
         restaurant = "Test Diner"
         structured_hours = [(["Mon"], "9:00 am", "5:00 pm")]
