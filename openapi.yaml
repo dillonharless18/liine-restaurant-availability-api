@@ -1,0 +1,36 @@
+openapi: 3.0.0
+info:
+  title: Liine Open Restaurants API
+  version: 1.0.0
+  description: API to find restaurants open at a specified date and time.
+paths:
+  /restaurants:
+    get:
+      summary: Get open restaurants
+      description: Returns a list of restaurants that are open at the specified date and time.
+      parameters:
+        - in: query
+          name: datetime
+          required: true
+          schema:
+            type: string
+            format: 'date-time'
+          description: The date and time to check for open restaurants in YYYY-MM-DDTHH:MM:SS format.
+      responses:
+        '200':
+          description: A JSON array of open restaurant names.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  description: The name of the restaurant.
+        '400':
+          description: Invalid datetime format provided.
+        '404':
+          description: No restaurants found for the given datetime or path not found.
+        '429':
+          description: Too many requests sent in a given amount of time.
+        '500':
+          description: Internal server error.
