@@ -73,5 +73,5 @@ This will start the API service inside a Docker container, accessible on port 30
 
 **If you would like to use the database instead of the in-memory datastore, run the following command**
     ```
-    docker run -p 3000:3000 -e USE_DB false liine-restaurant-availability-api-dillon-harless
+    docker run -p 3000:3000 -e USE_DB 1 liine-restaurants
     ```
