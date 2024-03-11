@@ -3,16 +3,16 @@ import os
 import atexit
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
+import json
+import sqlite3
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from collections import defaultdict
-import json
 from urllib.parse import urlparse, parse_qs
 from functools import partial
 from helper_functions.data_processing import get_data_file_path
 from helper_functions.initialize_db import initialize_db
 from helper_functions.query import get_open_restaurants_from_db
 from helper_functions.utility_functions import validate_datetime
-import sqlite3
 from rate_limiter.rate_limiter import RateLimiter
 
 
