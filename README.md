@@ -37,7 +37,7 @@ To set up and run the Liine API Service, follow these steps:
     python src/server_with_db.py
     ```
 
-4. **(Optional) HTTPS Support**
+    **(Optional) HTTPS Support**
     If you would like to use HTTPS, create a folder called `ssl/` at the root level of the project.
 
     Then run the following command to create your certificate in the ssl folder:
@@ -49,6 +49,8 @@ To set up and run the Liine API Service, follow these steps:
     Enter a password and optionally skip everything else as this is just for development purposes. You should now have `cert.pem` and `key.pem` files in the `ssl/` folder.
 
     Then set an environment variable called `USE_HTTPS`, either via a `.env` file or using the terminal. It must represent an integer, either positive, negative or `0`. Values `<= 0` will result in bypassing HTTPS, where values `>0` will prompt you for the password you used when setting up the certs.
+
+    Then run step 3 again.
 
 
 ## Usage Examples
