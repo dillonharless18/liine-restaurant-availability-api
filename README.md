@@ -40,6 +40,8 @@ To set up and run the Liine API Service, follow these steps:
     **(Optional) HTTPS Support**
     If you would like to use HTTPS, create a folder called `ssl/` at the root level of the project.
 
+    `mkdir ssl`
+
     Then run the following command to create your certificate in the ssl folder:
 
     ```
@@ -61,6 +63,11 @@ To use the API, send a GET request to the endpoint with the datetime parameter:
     GET http://127.0.0.1:3000/restaurants?datetime=2024-03-09T14:00:00
     ```
 
+    or if using `HTTPS`:
+
+    ```
+    GET https://127.0.0.1:3000/restaurants?datetime=2024-03-09T14:00:00
+    ``` 
 
 This will return a JSON response with a list of open restaurants at the given datetime or it will return an appropriate error.
 
@@ -125,3 +132,9 @@ In a production application, the API is generally versioned. Here, I've just mad
 ### HTTPS in Docker
 
 Currently HTTPS is only supported when not running in Docker.
+
+### HTTPS Slow to respond
+
+I have yet to deep dive on this, but occasionally upon starting the HTTPS server, I won't get any response for quite some time.
+
+I believe it may be due to the synchronous processing of requests and the nuances of the unsafe endpoint and how the browser treats it because it seems to happen when I first try to hit the endpoint from my browser.
