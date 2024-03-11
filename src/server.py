@@ -1,9 +1,9 @@
-import json
+import json, os
 from functools import partial
 from urllib.parse import urlparse, parse_qs
 from helper_functions.data_processing import get_data_file_path, preprocess_data
 from helper_functions.query import get_open_restaurants
-from helper_functions.utility_functions import validate_datetime
+from helper_functions.utility_functions import validate_datetime, set_up_https, check_https_desired
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from rate_limiter.rate_limiter import RateLimiter
 
@@ -74,8 +74,12 @@ def run(server_class=HTTPServer, handler_class=RequestHandler, port=3000, data=N
     server_address = ('0.0.0.0', port)
     httpd = server_class(server_address, custom_handler)
 
+    https_desired = check_https_desired()
+    if (https_desired): 
+        set_up_https(httpd)
+
     try:
-        print(f'Serving HTTP on port {port}...')
+        print(f'Serving on port {port}...')
         httpd.serve_forever()
     except KeyboardInterrupt:
         print("\nServer stopped by user.")
