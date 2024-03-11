@@ -89,6 +89,8 @@ To run the Liine API Service in a Docker container, use the included `Dockerfile
     docker run -p 3000:3000 -e USE_DB=1 liine-restaurants
     ```
 
+    **Note:** HTTPS is currently only supported outside of Docker.
+
 This will start the API service inside a Docker container, accessible on port 3000.
 
 
@@ -117,3 +119,7 @@ The names and placement of the files themselves might not be entirely standard. 
 ### API Versioning
 
 In a production application, the API is generally versioned. Here, I've just made the base url `/` instead of `/v1/`
+
+### HTTPS in Docker
+
+Currently HTTPS is only supported when not running in Docker.
