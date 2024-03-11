@@ -76,3 +76,30 @@ To run the Liine API Service in a Docker container, use the included `Dockerfile
     ```
 
 This will start the API service inside a Docker container, accessible on port 3000.
+
+
+## Limitations
+
+### Pagination
+
+This API does not implement pagination. In a real application since the dataset will be much larger, we'd need to paginate the data in some form or fashion. One way to approach this is to assign 
+
+### Relational Database Design
+
+The design of the SQLite database wasn't thought through very deeply and was somewhat influenced by the logic I had implemented prior in `server.py`.
+
+There is a row for each day that a restaurant is open. Instead the fields could have been expanded to Sun_open_time, Sun_closing_time, Mon_open_time, etc.
+
+The database could be more normalized in order to support future requirements more easily.
+
+### CORS
+
+There are no CORS headers being returned and therefore browsers requests hitting the server remotely should fail.
+
+### Code Structure
+
+The names and placement of the files themselves might not be entirely standard. I haven't done too much python and I'm not entierly familiar with industry standard patterns.
+
+### API Versioning
+
+In a production application, the API is generally versioned. Here, I've just made the base url `/` instead of `/v1/`

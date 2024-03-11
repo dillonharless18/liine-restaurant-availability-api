@@ -1,10 +1,10 @@
-from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from urllib.parse import urlparse, parse_qs
 from functools import partial
+from urllib.parse import urlparse, parse_qs
 from helper_functions.data_processing import get_data_file_path, preprocess_data
 from helper_functions.query import get_open_restaurants
 from helper_functions.utility_functions import validate_datetime
+from http.server import BaseHTTPRequestHandler, HTTPServer
 from rate_limiter.rate_limiter import RateLimiter
 
 class RequestHandler(BaseHTTPRequestHandler):
@@ -85,5 +85,3 @@ if __name__ == '__main__':
     data_filepath = get_data_file_path('restaurants.csv')
     structured_data = preprocess_data(data_filepath)
     run(data=structured_data)
-
-    
