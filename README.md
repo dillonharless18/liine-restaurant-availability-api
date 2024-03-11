@@ -60,13 +60,13 @@ To set up and run the Liine API Service, follow these steps:
 To use the API, send a GET request to the endpoint with the datetime parameter:
 
     ```
-    GET http://127.0.0.1:3000/restaurants?datetime=2024-03-09T14:00:00
+    curl "http://127.0.0.1:3000/restaurants?datetime=2024-03-09T14:00:00"
     ```
 
-    or if using `HTTPS`:
+Or if using `HTTPS`:
 
     ```
-    GET https://127.0.0.1:3000/restaurants?datetime=2024-03-09T14:00:00
+    curl -k "https://127.0.0.1:3000/restaurants?datetime=2024-03-09T14:00:00"
     ``` 
 
 This will return a JSON response with a list of open restaurants at the given datetime or it will return an appropriate error.
